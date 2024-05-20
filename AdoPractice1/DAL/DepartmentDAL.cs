@@ -47,5 +47,29 @@ namespace AdoPractice1.DAL
 
             return depts;
         }
+
+
+        public List<DepartmentSummary> EmployeeCountByDepartment()
+        {
+            List<DepartmentSummary> summaries=new List<DepartmentSummary> ();
+            using (SqlConnection conn = new SqlConnection(cs))
+            {
+                SqlCommand cmd = new SqlCommand("spEmployeeCountByDepartment", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    DepartmentSummary summary = new DepartmentSummary();
+                    summary.DepartmentName = reader["DepartmentName"].ToString() ?? "";
+                    summary.EmployeeCount = Convert.ToInt32(reader["EmployeeCount"]);
+
+                    summaries.Add(summary);
+                }
+            }
+            return summaries;
+        }
     }
 }
